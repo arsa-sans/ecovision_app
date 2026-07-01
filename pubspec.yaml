@@ -1,0 +1,28 @@
+name: ecovision_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  camera: ^0.12.0+1
+  flutter:
+    sdk: flutter
+  image: ^4.9.1
+  image_picker: ^1.2.3
+  onnxruntime: ^1.4.1
+  path_provider: ^2.1.6
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/models/best_model.onnx
+    - assets/waste_info.json
