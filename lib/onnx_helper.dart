@@ -16,7 +16,6 @@ class OnnxHelper {
     'textile',
   ];
 
-  // ImageNet normalization constants
   static const List<double> mean = [0.485, 0.456, 0.406];
   static const List<double> std = [0.229, 0.224, 0.225];
 
@@ -27,16 +26,13 @@ class OnnxHelper {
   static Future<void> initialize() async {
     if (_initialized) return;
 
-    // Initialize OrtEnv
     OrtEnv.instance.init();
 
-    // Load model from assets
     final rawAsset = await rootBundle.load('assets/models/best_model.onnx');
     final bytes = rawAsset.buffer.asUint8List();
     final sessionOptions = OrtSessionOptions();
     _session = OrtSession.fromBuffer(bytes, sessionOptions);
 
-    // Load knowledge base
     final jsonStr = await rootBundle.loadString('assets/waste_info.json');
     final jsonMap = json.decode(jsonStr) as Map<String, dynamic>;
     _knowledgeBase = jsonMap.map(
@@ -47,7 +43,6 @@ class OnnxHelper {
     _initialized = true;
   }
 
-  /// Preprocess a raw [img.Image] to a [Float32List] tensor (CHW, normalized).
   static Float32List _preprocessImage(img.Image image) {
     final resized = img.copyResize(image, width: 224, height: 224);
     final tensor = Float32List(3 * 224 * 224);
@@ -68,7 +63,6 @@ class OnnxHelper {
     return tensor;
   }
 
-  /// Run inference on an already-decoded [img.Image].
   static Future<WasteResult?> runInference(img.Image image) async {
     if (_session == null) await initialize();
 
@@ -94,18 +88,15 @@ class OnnxHelper {
 
     if (outputData == null) return null;
 
-    // outputData is List<List<double>> with shape [1, 7]
     final logits = (outputData.first as List<dynamic>)
         .map((e) => (e as num).toDouble())
         .toList();
 
-    // Softmax
     final maxLogit = logits.reduce((a, b) => a > b ? a : b);
     final expLogits = logits.map((l) => _exp(l - maxLogit)).toList();
     final sumExp = expLogits.reduce((a, b) => a + b);
     final probabilities = expLogits.map((e) => e / sumExp).toList();
 
-    // Argmax
     double maxProb = probabilities[0];
     int maxIdx = 0;
     for (int i = 1; i < probabilities.length; i++) {
@@ -125,7 +116,6 @@ class OnnxHelper {
     );
   }
 
-  /// Run inference on raw bytes (jpg/png from file or camera).
   static Future<WasteResult?> runInferenceOnBytes(Uint8List bytes) async {
     final image = img.decodeImage(bytes);
     if (image == null) return null;
