@@ -37,18 +37,16 @@ class WasteResult {
   bool get isHighConfidence => confidence >= 0.65;
 }
 
-// Category-to-color mapping for UI differentiation
 const Map<String, int> wasteColors = {
-  'glass': 0xFF00BCD4,     // Cyan
-  'hazardous': 0xFFFF5252,  // Red
-  'metal': 0xFF9E9E9E,      // Grey
-  'organic': 0xFF66BB6A,    // Green
-  'paper': 0xFFFFCA28,      // Amber
-  'plastic': 0xFF42A5F5,    // Blue
-  'textile': 0xFFAB47BC,    // Purple
+  'glass': 0xFF00BCD4,    
+  'hazardous': 0xFFFF5252,  
+  'metal': 0xFF9E9E9E,      
+  'organic': 0xFF66BB6A,    
+  'paper': 0xFFFFCA28,      
+  'plastic': 0xFF42A5F5,    
+  'textile': 0xFFAB47BC,    
 };
 
-// Category-to-emoji mapping for visual flair
 const Map<String, String> wasteEmojis = {
   'glass': '🫙',
   'hazardous': '☢️',
